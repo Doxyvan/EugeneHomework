@@ -1,6 +1,6 @@
 from  operator import truediv
 def main1():
-    mystr = "([{}])([)}}]{]{}{]})"
+    mystr = input()
     newstr = ""
     maxstr = ""
     j=1
@@ -52,26 +52,27 @@ def main1():
             str_with_classes_of_depth.append(mystr[n]+"-"+str(depth)) #Для наглядности идеи глубины скобок
             
 
-            try:
-                if len(newstr) == 0:
-                    kWhenBreak = n+1
-                    if n+1<=len(mystr)-1:
-                        if ord(mystr[n+1]) in open:
-                            i=0
-                        elif ord(mystr[n+1]) in close:
-                            i+=1
-                            if i>1:
-                                depth-=1
-                    continue
+            
+            if len(newstr) == 0:
+                kWhenBreak = n+1
+                if n+1<=len(mystr)-1:
+                    if ord(mystr[n+1]) in open:
+                        i=0
+                    elif ord(mystr[n+1]) in close:
+                        i+=1
+                        if i>1:
+                            depth-=1
+                continue
 
-                elif n == len(mystr)-1 and firstExistence == 1 and (ord(newstr[0])+1==ord(mystr[n]) or ord(newstr[0])+2==ord(mystr[n])) : #Этот elif и последующий выполняют одну и ту же функцию, но этот сделан для закрытия ГЛАВНЫХ скобок, а следующий для внутренних
-                    newstr = newstr + mystr[n]
-                    balancecoeff -=1
-                    if len(newstr) > len(maxstr):
-                        maxstr = newstr
-                elif n == len(mystr)-1 and firstExistence == 1 and (ord(newstr[0])+1!=ord(mystr[n]) or ord(newstr[0])+1!=ord(mystr[n])) :
-                    newstr = newstr[1:]
-                elif (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+1 == ord(mystr[n])) or (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+2 == ord(mystr[n])) and balancecoeff > 0:
+            elif n == len(mystr)-1 and firstExistence == 1 and (ord(newstr[0])+1==ord(mystr[n]) or ord(newstr[0])+2==ord(mystr[n])) : #Этот elif и последующий выполняют одну и ту же функцию, но этот сделан для закрытия ГЛАВНЫХ скобок, а следующий для внутренних
+                newstr = newstr + mystr[n]
+                balancecoeff -=1
+                if len(newstr) > len(maxstr):
+                    maxstr = newstr
+            elif n == len(mystr)-1 and firstExistence == 1 and (ord(newstr[0])+1!=ord(mystr[n]) or ord(newstr[0])+1!=ord(mystr[n])) :
+                newstr = newstr[1:]
+            elif -len(newstr) <= lenOfNewstr-(n-kWhenBreak)-i < len(newstr):
+                if (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+1 == ord(mystr[n])) or (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+2 == ord(mystr[n])) and balancecoeff > 0:
                     newstr = newstr + mystr[n]
                     balancecoeff -= 1
                     if balancecoeff == 0:
@@ -84,8 +85,12 @@ def main1():
                     firstExistence = 0 #Произошла поломка всей подстроки, так что первый удаляется тоже
                     balancecoeff = 0
                     kWhenBreak = n
-            except:
-                pass
+            else:
+                newstr = ""
+                firstExistence = 0 #Произошла поломка всей подстроки, так что первый удаляется тоже
+                balancecoeff = 0
+                kWhenBreak = n
+            
 
             #Прогнозирование следующих скобок
             if n+1<=len(mystr)-1:
