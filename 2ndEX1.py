@@ -10,7 +10,13 @@ def main1():
         else:
             if len(newstr) > len(maxlenstr):
                 maxlenstr = newstr
-            newstr = mystr[i]
+
+            length = len(newstr)
+            if mystr[i] == newstr[-length]:
+                newstr = newstr[-length+1:]
+                newstr = newstr + mystr[i]
+            else:
+                newstr = mystr[i]
     print(maxlenstr)
 
 if __name__ == "__main__":

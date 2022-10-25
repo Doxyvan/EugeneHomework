@@ -2,7 +2,11 @@
 
 
 def main():
+    N = int(input())
     worklist = list(map(int, input().split())) #Список, куда вводятся данные
+    if len(worklist)!=N:
+        print("Проверьте свой ввод!")
+        return
     l = [] # Лист с кратким именем, с которым быстро можно работать
     lanswer = []
     if len(worklist)<4:
@@ -58,8 +62,10 @@ def main():
             
             if abs(c - sum([minfirst]+sumka[len(sumka)-1])) <= abs(c - sum([firstnum]+sumka[len(sumka)-1])):
                 print([minfirst]+sumka[len(sumka)-1])
+                print(sum([minfirst]+sumka[len(sumka)-1]))
             else: 
                 print([firstnum]+sumka[len(sumka)-1])
+                print(sum([firstnum]+sumka[len(sumka)-1]))
 
 if __name__ == "__main__":
     main()
