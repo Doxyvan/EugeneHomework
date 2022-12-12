@@ -2,15 +2,13 @@ import numpy as np
 import sys
 def output(list_with_numbers, one_more_piece):
     list_with_numbers.append(one_more_piece)
-    global f
-    f = open("Output_Lab_2.txt", "a")
     for piece in range(len(list_with_numbers)):
-        t_row=(list_with_numbers[piece]-1)//n + 1
-        t_col=(list_with_numbers[piece]-1)%n + 1
+        t_row=(list_with_numbers[piece]-1)//n
+        t_col=(list_with_numbers[piece]-1)%n
         coordinates = (t_col, t_row)
         f.write(str(coordinates))
     f.write("\n")
-    f.close()
+    return
     
     
         
@@ -47,8 +45,9 @@ def matrix(num):
     return mymytrix
 
 def main():
-    
-    sys.setrecursionlimit(99999999)
+    global f
+    f = open("Output_Lab_2.txt", "a")
+    sys.setrecursionlimit(10000000)
     global n
     n, l, k = list(map(int, input().split())) #Размерность матрицы n*n, l - кол-во фигур, которое надо расставить, k - кол-во фигур, которые уже стоят
     global new_pieces
@@ -59,13 +58,14 @@ def main():
     mymatrix = matrix(n)
     for _ in range(k):
         x, y = list(map(int, input().split()))
-        number_of_square = (y-1)*n+x
-        mymatrix = set_up_piece(mymatrix, number_of_square-1)
+        number_of_square = (y)*n+x
+        mymatrix = set_up_piece(mymatrix, number_of_square)
       
     for ncopy in range(l):
         matrix_copies[ncopy] = [x[:] for x in mymatrix]
     free_square = find_free_square(mymatrix, 0)
     set_up_new_pieces(free_square, 0, l, mymatrix, curcle)
+    f.close()
     
 
 def set_up_new_pieces(free_square, current_piece, cnt_of_pieces, matrix, curcle = 0):
@@ -90,7 +90,7 @@ def set_up_new_pieces(free_square, current_piece, cnt_of_pieces, matrix, curcle 
                     break
             new_pieces[current_piece] = (row-1)*n+col +1
             new_free_square = find_free_square(matrix, free_square)
-            return set_up_new_pieces(new_free_square, current_piece+1, cnt_of_pieces, matrix, curcle)
+            set_up_new_pieces(new_free_square, current_piece+1, cnt_of_pieces, matrix, curcle)
         else:
             for row in range(p_row, n):
                 if row > p_row:
@@ -108,7 +108,7 @@ def set_up_new_pieces(free_square, current_piece, cnt_of_pieces, matrix, curcle 
             for mc in range(current_piece-curcle, cnt_of_pieces):
                 matrix_copies[mc] = [x[:] for x in matrix]
             new_free_square = find_free_square(matrix, new_pieces[current_piece-curcle])
-            return  set_up_new_pieces(new_free_square, current_piece-curcle, cnt_of_pieces, matrix, curcle)
+            set_up_new_pieces(new_free_square, current_piece-curcle, cnt_of_pieces, matrix, curcle)
     else:
         curcle += 1
         if current_piece-curcle<0:
@@ -120,6 +120,6 @@ def set_up_new_pieces(free_square, current_piece, cnt_of_pieces, matrix, curcle 
             for mc in range(current_piece-curcle, cnt_of_pieces):
                 matrix_copies[mc] = [x[:] for x in matrix]
             new_free_square = find_free_square(matrix, new_pieces[current_piece-curcle])
-            return  set_up_new_pieces(new_free_square, current_piece-curcle, cnt_of_pieces, matrix, curcle)
+            set_up_new_pieces(new_free_square, current_piece-curcle, cnt_of_pieces, matrix, curcle)
 if __name__ == "__main__":
     main()
