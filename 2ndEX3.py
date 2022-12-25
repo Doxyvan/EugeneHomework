@@ -74,6 +74,7 @@ def main1():
                 elif -len(newstr) <= lenOfNewstr-(n-kWhenBreak)-i < len(newstr):
                     if (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+1 == ord(mystrClone[n])) or (ord(newstr[lenOfNewstr-(n-kWhenBreak)-i])+2 == ord(mystrClone[n])) and balancecoeff > 0:
                         newstr = newstr + mystrClone[n]
+                        lenOfNewstr = len(newstr)
                         balancecoeff -= 1
                         if balancecoeff == 0:
                             firstExistence = 0 #Закрытие первой скобки произошло в середине, т.е. нет обложки для внутренних скобок
@@ -84,6 +85,7 @@ def main1():
                         newstr = newstr[1:]
                     elif n == len(mystrClone)-1 and firstExistence == 1 and (ord(newstr[0])+1==ord(mystrClone[n]) or ord(newstr[0])+2==ord(mystrClone[n])) and balancecoeff == 1: #Этот elif и последующий выполняют одну и ту же функцию, но этот сделан для закрытия ГЛАВНЫХ скобок, а следующий для внутренних
                         newstr = newstr + mystrClone[n]
+                        lenOfNewstr = len(newstr)
                         firstExistence=0
                         balancecoeff -=1
                         if len(newstr) > len(maxstr):
