@@ -42,21 +42,22 @@ def Second_Derivative(x):
 
 
 def Tangent(y, diff_y, x, x0, area, coloring="g"):
-    function=[]
-    rangeForFunc=5
-    if x0*10-rangeForFunc<0:
-        pointA = 0
-    else:
-        pointA = int(x0*10-rangeForFunc)
-    if x0*10+rangeForFunc>=len(x):
-        pointB = len(x)-1
-    else:
-        pointB = int(x0*10+rangeForFunc)
-    for i in range(int(pointA), int(pointB)):
-        function.append(y + diff_y*(x[i]-x0))
+    k = x.index(x0)
+    rangeForFunc=10
+    difference_right, difference_left = 0,0
+    function=[y + diff_y*(x[k]-x0)]
+    while ((x[k-(difference_left)]-x[k+difference_right])**2 + (function[0]-function[-1])**2)**(1/2) < rangeForFunc and (0< k-difference_left or difference_right+k+1 < len(x)):
+        if k-(difference_left+1) >= 0:
+            difference_left+=1
+            function[:0] = [y + diff_y*(x[k-difference_left]-x0)]
+        if k+(difference_right+1) < len(x):
+            difference_right+=1
+            function.append(y + diff_y*(x[k+difference_right]-x0))
+            
+        
+       
     
-    area.plot(x[pointA:pointB], function, color=coloring)
-    
+    area.plot(x[k-(difference_left):k+difference_right+1], function, color=coloring)
     return area
 
 def math():
@@ -70,7 +71,7 @@ def math():
 def drawing(x, y, y_diff_1, y_diff_2):
     
     
-
+    
     figure, axis = plt.subplots(2, 2)
     axis[0,0].axhline(y=0, color='k')
     axis[0,0].axvline(x=0, color='k')
@@ -85,11 +86,15 @@ def drawing(x, y, y_diff_1, y_diff_2):
     axis[0, 0].plot(x, y)
     axis[0, 0].set_title("Function")
     maxY = max(y)
+    minY = min(y)
     for n in range(len(x)):
         if y[n] == maxY:
             maxX = x[n]
+        if y[n] == minY:
+            minX = x[n]
 
     axis[0, 0].plot(maxX, maxY, 'o', color = 'b')
+    axis[0, 0].plot(minX, minY, 'o', color = 'b')
     x0 = random.randint(min(x)*10, max(x)*10)
     axis[0,0] = Tangent(y[x0], y_diff_1[x0], x, x[x0], axis[0,0], "r")
     axis[0,0] = Tangent(y[x0], (-1/y_diff_1[x0]), x, x[x0], axis[0,0], "c")
@@ -103,7 +108,7 @@ def drawing(x, y, y_diff_1, y_diff_2):
     axis[1, 0].plot(x, y_diff_2)
     axis[1, 0].set_title("Second derivative of Function")
 
-    for n in range(2, len(x), 5):
+    for n in range(1, len(x)):
         axis[1,1] = Tangent(y[n], y_diff_1[n], x, x[n],axis[1,1])
         axis[1,1].plot(x[n], y[n], 'o', color = 'b')
     axis[1,1].plot(x,y, color="r")
