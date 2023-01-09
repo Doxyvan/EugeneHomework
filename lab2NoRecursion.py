@@ -1,7 +1,7 @@
 import copy
 import time
 
-def output(list_with_numbers, n):
+def output(list_with_numbers: list, n: int) -> None:
     for piece in range(len(list_with_numbers)):
         t_row=(list_with_numbers[piece])//n
         t_col=(list_with_numbers[piece])%n
@@ -9,7 +9,7 @@ def output(list_with_numbers, n):
         f.write(str(coordinates))
     f.write("\n")
 
-def step_back(wmatrix, wmatrix_clones, n, end, new_pieces):
+def step_back(wmatrix: list, wmatrix_clones: list, n: int, end: int, new_pieces: list) -> tuple:
     l = len(new_pieces)
     step = 0
     for i in range(l-1):
@@ -35,7 +35,7 @@ def step_back(wmatrix, wmatrix_clones, n, end, new_pieces):
             break
     return wmatrix, wmatrix_clones, new_pieces
 
-def working(wmatrix, n, new_pieces):
+def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
     global outputTheBoard
     wmatrix_clones = [0]*(len(new_pieces)-1)
     end = find_last_free_square(wmatrix, n, 0)
@@ -58,9 +58,11 @@ def working(wmatrix, n, new_pieces):
                     if wmatrix[row][col] == "0":
                         new_pieces[-1] = row*n+col
                         output(new_pieces, n)
+                        matrix_for_output = wmatrix.copy()
+                        matrix_for_output = set_up_piece(matrix_for_output, find_free_square(matrix_for_output, n), n)
                         if outputTheBoard == False:
                             for i in range(n):
-                                print(wmatrix[i])
+                                print(matrix_for_output[i])
                             outputTheBoard = True
 
         end = find_last_free_square(wmatrix, n, 0)
@@ -89,6 +91,7 @@ def main():
     f.close()
     end = time.time()
     #print(end-now)
+
 def matrix(n):
     wmatrix = []
     row = ["0"] * n
@@ -98,7 +101,7 @@ def matrix(n):
     return wmatrix
 
 
-def set_up_piece(wmatrix, pos, n,  piece = "#"):
+def set_up_piece(wmatrix: list, pos: int, n: int,  piece = "#") -> list:
     if pos is not None:
         row = (pos//n)
         col = (pos%n)
@@ -114,7 +117,7 @@ def set_up_piece(wmatrix, pos, n,  piece = "#"):
                         wmatrix[row+(i-2)][col+m] = "*"
         return wmatrix
 
-def find_free_square(wmatrix, n, previous_free_square=0):
+def find_free_square(wmatrix: list, n:int, previous_free_square=0) -> int:
     p_row = (previous_free_square//n)
     p_col = (previous_free_square%n)
     for row in range(p_row, n):
@@ -124,7 +127,7 @@ def find_free_square(wmatrix, n, previous_free_square=0):
             if wmatrix[row][col] == "0":
                 return (row*n)+col
 
-def find_last_free_square(wmatrix, n, previous_free_square=0):
+def find_last_free_square(wmatrix:list, n:int, previous_free_square=0) -> int:
     k = -1
     p_row = (previous_free_square//n)
     p_col = (previous_free_square%n)
@@ -138,7 +141,7 @@ def find_last_free_square(wmatrix, n, previous_free_square=0):
         return find_last_piece_square(wmatrix, n, 0)
     return k
 
-def find_last_piece_square(wmatrix, n, previous_free_square=0):
+def find_last_piece_square(wmatrix: list, n: int, previous_free_square=0) -> int:
     j = 0
     p_row = (previous_free_square//n)
     p_col = (previous_free_square%n)
