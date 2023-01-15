@@ -46,7 +46,7 @@ def Tangent(y, diff_y, x, x0, area, coloring="g"):
     rangeForFuncY=3
     difference_right, difference_left = 0,0
     function=[y + -diff_y*(x[k]-x0)]
-    while abs((x[k-(difference_left)]-x[k+difference_right])) < rangeForFuncX and abs(function[0]-function[-1]) < rangeForFuncY and (0< k-difference_left or difference_right+k+1 < len(x)):
+    while (0< k-difference_left or difference_right+k+1 < len(x)):
         if k-(difference_left+1) >= 0:
             difference_left+=1
             function[:0] = [y + diff_y*(x[k-difference_left]-x0)]

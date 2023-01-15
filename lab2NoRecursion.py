@@ -37,6 +37,7 @@ def step_back(wmatrix: list, wmatrix_clones: list, n: int, end: int, new_pieces:
 
 def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
     global outputTheBoard
+    global cnt
     wmatrix_clones = [0]*(len(new_pieces)-1)
     end = find_last_free_square(wmatrix, n, 0)
     for i in range(len(new_pieces)-1):
@@ -57,8 +58,9 @@ def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
                 for col in range(p_col, n):
                     if wmatrix[row][col] == "0":
                         new_pieces[-1] = row*n+col
+                        cnt+=1
                         output(new_pieces, n)
-                        matrix_for_output = wmatrix.copy()
+                        matrix_for_output = copy.deepcopy(wmatrix)
                         matrix_for_output = set_up_piece(matrix_for_output, find_free_square(matrix_for_output, n), n)
                         if outputTheBoard == False:
                             for i in range(n):
@@ -74,21 +76,27 @@ def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
     
     
 def main():
+    global cnt
+    cnt = 0
     now = time.time()
     global f
+    in_data = open("Input_Lab_2.txt", "r").readlines()
+    in_data = [x[:-1] for x in in_data]
     f = open("Output_Lab_2.txt", "w")
     global outputTheBoard
     outputTheBoard = False
-    n, l, k = list(map(int, input().split()))
+    n, l, k = list(map(int, in_data[0].split()))
+    in_data = in_data[1:]
     new_pieces = [-1]*l
     wmatrix = matrix(n)
-    for _ in range(k):
-        x, y = list(map(int, input().split()))
+    for index in range(k):
+        x, y = list(map(int, in_data[index].split()))
         pos = y*n + x
         wmatrix = set_up_piece(wmatrix, pos, n)
     
     working(wmatrix, n, new_pieces)
     f.close()
+    print(cnt)
     end = time.time()
     #print(end-now)
 
