@@ -3,14 +3,13 @@ import numpy as np
 from numpy import sin, cos, log2, log
 import random
 
-# f(x) = sin(x)*(cos((x^2)+5)); 0<=x<=5
+# f(x) = sin(x)*(cos((x^2)+5)); 0<=x<=5  
 def Function(x):
     y = []
     for i in range(len(x)):
         k = x[i]
         y.append(np.round(10*log2(8*k)*cos(((k**2)/10)+4)*2**k))
     return y
-
 def Length(x,y):
     length = 0
     for n in range(1, len(x)):
