@@ -108,6 +108,7 @@ def drawing(x, y, y_diff_1, y_diff_2):
     axis[1, 0].plot(x, y_diff_2)
     axis[1, 0].set_title("Second derivative of Function")
 
+    axis[1, 1].set_title("Касательное расслоение")
     for n in range(1, len(x)):
         axis[1,1] = Tangent(y[n], y_diff_1[n], x, x[n],axis[1,1])
         axis[1,1].plot(x[n], y[n], 'o', color = 'b')
