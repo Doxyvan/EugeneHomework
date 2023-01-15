@@ -90,7 +90,9 @@ def main():
     new_pieces = [-1]*l
     wmatrix = matrix(n)
     for index in range(k):
-        x, y = list(map(int, in_data[index].split()))
+        coordinates = in_data[index].split()
+        x, y = coordinates
+        x, y = int(x), int(y)
         pos = y*n + x
         wmatrix = set_up_piece(wmatrix, pos, n)
     
