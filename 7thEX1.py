@@ -29,7 +29,7 @@ def Length(x,y):
 def First_Derivative(x):
     deff_y = []
     for i in x:
-        deff_y.append( -((i**2)*(2**(i+1))*log(8*i)*sin(((i**2)/10)+4) + (-5*log(2)*i*(2**(i+1))*log(8*i)-5*(2**(i+1)))*cos(((i**2)/10)+4))/i)
+        deff_y.append( -((i**2)*(2**(i+1))*log(8*i)*sin(((i**2)/10)+4) + (-5*log(2)*i*(2**(i+1))*log(8*i)-5*(2**(i+1)))*cos(((i**2)/10)+4))/(log(2)*i))
     return deff_y
 
 def Second_Derivative(x):
@@ -43,10 +43,11 @@ def Second_Derivative(x):
 
 def Tangent(y, diff_y, x, x0, area, coloring="g"):
     k = x.index(x0)
-    rangeForFunc=10
+    rangeForFuncX=1
+    rangeForFuncY=3
     difference_right, difference_left = 0,0
-    function=[y + diff_y*(x[k]-x0)]
-    while ((x[k-(difference_left)]-x[k+difference_right])**2 + (function[0]-function[-1])**2)**(1/2) < rangeForFunc and (0< k-difference_left or difference_right+k+1 < len(x)):
+    function=[y + -diff_y*(x[k]-x0)]
+    while abs((x[k-(difference_left)]-x[k+difference_right])) < rangeForFuncX and abs(function[0]-function[-1]) < rangeForFuncY and (0< k-difference_left or difference_right+k+1 < len(x)):
         if k-(difference_left+1) >= 0:
             difference_left+=1
             function[:0] = [y + diff_y*(x[k-difference_left]-x0)]

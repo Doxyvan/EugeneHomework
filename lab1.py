@@ -18,6 +18,7 @@ def recursion(mylist: list, current_num: int, current_sum: int, bag_of_signs: li
 
 def main():
     input_list = open("inputLab1.txt", "r").readline() #Считываем
+    #input_list = [int(x) for x in input().split()]
     goal = input_list[-1] #Крайнее число - цель
     working_list = input_list[1:len(input_list)-1] #Отсекаем числа, с которыми собираемся работать
 
