@@ -113,7 +113,10 @@ def drawing(x, y, y_diff_1, y_diff_2):
         axis[1,1] = Tangent(y[n], y_diff_1[n], x, x[n],axis[1,1])
         axis[1,1].plot(x[n], y[n], 'o', color = 'b')
     axis[1,1].plot(x,y, color="r")
-    print(Length(x,y))
+    length = Length(x,y)
+
+    axis[0,0].set_xlabel('Length: ' + str(round(length)))
+    print(length)
     #print(LengthVer2(0,5))
     plt.show()
     
