@@ -1,7 +1,9 @@
 import copy
 import time
 
-def output(list_with_numbers: list, n: int) -> None:
+def output(list_with_numbers: list, n: int, condition_pieces:tuple) -> None:
+    for piece in condition_pieces:
+        f.write(str(piece))
     for piece in range(len(list_with_numbers)):
         t_row=(list_with_numbers[piece])//n
         t_col=(list_with_numbers[piece])%n
@@ -35,7 +37,7 @@ def step_back(wmatrix: list, wmatrix_clones: list, n: int, end: int, new_pieces:
             break
     return wmatrix, wmatrix_clones, new_pieces
 
-def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
+def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple) -> tuple:
     global outputTheBoard
     global cnt
     wmatrix_clones = [0]*(len(new_pieces)-1)
@@ -59,10 +61,10 @@ def working(wmatrix: list, n: int, new_pieces: list) -> tuple:
                     if wmatrix[row][col] == "0":
                         new_pieces[-1] = row*n+col
                         cnt+=1
-                        output(new_pieces, n)
-                        matrix_for_output = copy.deepcopy(wmatrix)
-                        matrix_for_output = set_up_piece(matrix_for_output, find_free_square(matrix_for_output, n), n)
+                        output(new_pieces, n, condition_pieces)
                         if outputTheBoard == False:
+                            matrix_for_output = copy.deepcopy(wmatrix)
+                            matrix_for_output = set_up_piece(matrix_for_output, find_free_square(matrix_for_output, n), n)
                             for i in range(n):
                                 print(matrix_for_output[i])
                             outputTheBoard = True
@@ -81,7 +83,6 @@ def main():
     now = time.time()
     global f
     with open("Input_Lab_2.txt", "r") as in_data_elder:
-        in_data_elder = open("Input_Lab_2.txt", "r").readlines()
         in_data = [x.replace("\n", "") for x in in_data_elder]
     f = open("Output_Lab_2.txt", "w")
     global outputTheBoard
@@ -90,14 +91,16 @@ def main():
     in_data = in_data[1:]
     new_pieces = [-1]*l
     wmatrix = matrix(n)
+    condition_pieces = []
     for index in range(k):
         coordinates = in_data[index].split()
         x, y = coordinates
         x, y = int(x), int(y)
+        condition_pieces.append((x,y))
         pos = y*n + x
         wmatrix = set_up_piece(wmatrix, pos, n)
     
-    working(wmatrix, n, new_pieces)
+    working(wmatrix, n, new_pieces, condition_pieces)
     f.close()
     print(cnt)
     end = time.time()
