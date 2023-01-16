@@ -48,9 +48,14 @@ def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple) -> 
         wmatrix = set_up_piece(wmatrix, free_square, n)
         new_pieces[i] = free_square
     
-    
+    if len(new_pieces) == 0:
+        output(new_pieces, n, condition_pieces)
+        for i in range(n):
+            print(wmatrix[i])
+        return
+
     while new_pieces[0] != n*n -1:
-        free_square = find_free_square(wmatrix, n, new_pieces[-2])
+        free_square = find_free_square(wmatrix, n)
         if free_square is not None:
             p_row = (free_square//n)
             p_col = (free_square%n)
@@ -83,7 +88,7 @@ def main():
     now = time.time()
     global f
     with open("Input_Lab_2.txt", "r") as in_data_elder:
-        in_data = [x.replace("\n", "") for x in in_data_elder]
+        in_data = [x.replace("\n", "") for x in in_data_elder.readlines()]
     f = open("Output_Lab_2.txt", "w")
     global outputTheBoard
     outputTheBoard = False
