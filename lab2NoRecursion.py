@@ -80,8 +80,9 @@ def main():
     cnt = 0
     now = time.time()
     global f
-    in_data = open("Input_Lab_2.txt", "r").readlines()
-    in_data = [x[:-1] for x in in_data]
+    with open("Input_Lab_2.txt", "r") as in_data_elder:
+        in_data_elder = open("Input_Lab_2.txt", "r").readlines()
+        in_data = [x.replace("\n", "") for x in in_data_elder]
     f = open("Output_Lab_2.txt", "w")
     global outputTheBoard
     outputTheBoard = False
