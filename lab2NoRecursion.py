@@ -3,11 +3,11 @@ import time
 
 def output(list_with_numbers: list, n: int, condition_pieces:tuple) -> None:
     for piece in condition_pieces:
-        f.write(str(piece))
+        f.write(str(piece[::-1]))
     for piece in range(len(list_with_numbers)):
         t_row=(list_with_numbers[piece])//n
         t_col=(list_with_numbers[piece])%n
-        coordinates = (t_col, t_row)
+        coordinates = (t_row,t_col)
         f.write(str(coordinates))
     f.write("\n")
 
@@ -37,11 +37,12 @@ def step_back(wmatrix: list, wmatrix_clones: list, n: int, end: int, new_pieces:
             break
     return wmatrix, wmatrix_clones, new_pieces
 
-def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple) -> tuple:
+
+def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple, cnt_of_my_pieces:int, cnt_of_condition_pieces:int) -> tuple:
     global outputTheBoard
     global cnt
     wmatrix_clones = [0]*(len(new_pieces)-1)
-    end = find_last_free_square(wmatrix, n, 0)
+    
     for i in range(len(new_pieces)-1):
         free_square = find_free_square(wmatrix, n, 0)
         wmatrix_clones[i] = copy.deepcopy(wmatrix)
@@ -50,12 +51,14 @@ def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple) -> 
     
     if len(new_pieces) == 0:
         output(new_pieces, n, condition_pieces)
+        cnt+=1
         for i in range(n):
             print(wmatrix[i])
         return
 
     while new_pieces[0] != n*n -1:
         free_square = find_free_square(wmatrix, n)
+        end = find_last_free_square(wmatrix, n, 0)
         if free_square is not None:
             p_row = (free_square//n)
             p_col = (free_square%n)
@@ -74,7 +77,11 @@ def working(wmatrix: list, n: int, new_pieces: list, condition_pieces:tuple) -> 
                                 print(matrix_for_output[i])
                             outputTheBoard = True
 
-        end = find_last_free_square(wmatrix, n, 0)
+        else:
+            index_of_end = count_of_pieces(wmatrix,n)-(cnt_of_condition_pieces+cnt_of_my_pieces)
+            for i in range(index_of_end+1, -1, -1):
+                new_pieces[index_of_end]=n*n-1
+            end = new_pieces[index_of_end]
         ret_step_back = step_back(wmatrix, wmatrix_clones, n, end, new_pieces)
         if ret_step_back is None:
             return
@@ -105,11 +112,11 @@ def main():
         pos = y*n + x
         wmatrix = set_up_piece(wmatrix, pos, n)
     
-    working(wmatrix, n, new_pieces, condition_pieces)
+    working(wmatrix, n, new_pieces, condition_pieces, l, k)
     f.close()
     print(cnt)
     end = time.time()
-    #print(end-now)
+    print(end-now)
 
 def matrix(n):
     wmatrix = []
@@ -159,7 +166,13 @@ def find_last_free_square(wmatrix:list, n:int, previous_free_square=0) -> int:
     if k == -1:
         return find_last_piece_square(wmatrix, n, 0)
     return k
-
+def count_of_pieces(wmatrix: list, n:int):
+    cnt = 0
+    for i in range(n):
+        for j in range(n):
+            if wmatrix[i][j] == "#":
+                cnt+=1
+    return cnt
 def find_last_piece_square(wmatrix: list, n: int, previous_free_square=0) -> int:
     j = 0
     p_row = (previous_free_square//n)
