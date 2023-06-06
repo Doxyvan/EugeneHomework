@@ -93,13 +93,20 @@ from gui import Game_Box, Box
 from figure import King_Horse as kh_figure
 from figure import Figure
 
+
+
 class Game():
-    
+    """
+    Класс, который подготавливает данные для их дальнейшей обработки, взаимодействует с окнами
+    tkinter и pygame. Также завершает работу всей программы, записывает данные в файл.
+    """
     def __init__(self, figure, f) -> None:
-        self.figure = figure
-        self.f = f
-        self.cnt = 0
+        #Подготовительные данные 
+        self.figure = figure #Ссылка на фигуру
+        self.f = f #Открытый для записи файл
+        self.cnt = 0 #Переменная для кол-ва решений
     
+    #Открытие окон ввода и инициализация доски
     def start(self):
         in_data = Box() #Создаем окно для ввода начальных значений
         in_data.wait_window() #Ждем отработки окна
@@ -113,11 +120,13 @@ class Game():
             self.f.close()
             return
         
-        self.create_matrixes(n)
-        self.start_time = time.time()
+        self.create_matrixes(n)#Создание матриц для решения
+        self.start_time = time.time() #Начало отсчета времени
 
-        
+        #Инициализация доски
         board = Board(self.wmatrix, n, [-1]*l, [], l, k, self.matrix_for_pg, self.figure, self.f, self)
+
+
         for index in range(k):
             board.condition_pieces.append((x[index],y[index])) #Запись координат фигур
             pos = y[index]*n + x[index] #Перевод координат в порядковый номер
@@ -125,11 +134,13 @@ class Game():
             #Постановка в матрице pygame
             self.matrix_for_pg.set_up_piece_for_tkinter(pos, n, (0,255,0), (0, 0, 255), self.figure)
 
-        
+        #Запуск просчета решений
         board.working()
 
+        #Завершение программы
         self.end()
 
+    #Функция, которая создает матрицы для решений
     def create_matrixes(self, n):
         self.wmatrix = []
         row = ["0"] * n #Создаем строчку
@@ -148,6 +159,9 @@ class Game():
         self.end = time.time()#Получаем время окончания работы
         print(self.end-self.start_time)#Выводим время работы
         print(self.cnt)#Выводим кол-во ходов
+
+    
+        #Класс, который по большинству перенял функциональное решение и адаптировал его для ООП
 class Board():
     def __init__(self, wmatrix, n, new_pieces, condition_pieces, l, k, matrix_for_pg, figure, f, master) -> None:
         self.wmatrix = wmatrix
