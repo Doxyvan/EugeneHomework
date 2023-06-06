@@ -89,7 +89,7 @@
 import time
 import pygame as pg
 import exceptions
-from gui import Game_Box, Box
+from gui import PyGameWindow, NLK_Window
 from figure import King_Horse as kh_figure
 from figure import Figure
 
@@ -108,7 +108,7 @@ class Game():
     
     #Открытие окон ввода и инициализация доски
     def start(self):
-        in_data = Box() #Создаем окно для ввода начальных значений
+        in_data = NLK_Window() #Создаем окно для ввода начальных значений
         in_data.wait_window() #Ждем отработки окна
         n, l, k = in_data.get_info() #Получаем информацию о поле и фигурах
         x, y = in_data.get_coords()  #Получаем координаты K-тых фигур
@@ -147,7 +147,7 @@ class Game():
         for _ in range(n):
             self.wmatrix.append([x for x in row]) #Множим эту строчку по числу n
         
-        self.matrix_for_pg = Game_Box(n)
+        self.matrix_for_pg = PyGameWindow(n)
 
     #Функция для записи в файл определенного осообщения
     def output_message(self, msg:str) -> None:
@@ -156,8 +156,8 @@ class Game():
         self.f.write("\n")
     def end(self):
         self.f.close()#Закрываем файл
-        self.end = time.time()#Получаем время окончания работы
-        print(self.end-self.start_time)#Выводим время работы
+        self.end_time= time.time()#Получаем время окончания работы
+        print(self.end_time-self.start_time)#Выводим время работы
         print(self.cnt)#Выводим кол-во ходов
 
     
@@ -172,7 +172,6 @@ class Board():
         self.k = k
         self.matrix_for_pg = matrix_for_pg
         self.figure = figure
-        self.f = f
         self.master = master
         self.outputTheBoard = False
     
@@ -379,7 +378,7 @@ class Board():
             return None
         
     #Функция проходится по доске и считает поставленные фигурки
-    def count_of_pieces(self): 
+    def count_of_pieces(self) -> int: 
         cnt = 0
         for i in range(self.n):
             for j in range(self.n):

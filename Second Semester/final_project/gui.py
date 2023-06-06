@@ -14,7 +14,7 @@ _________
 _________
 В поля ввода могут вводится исключительно положительные числа
 """
-class Box(tk.Tk):
+class NLK_Window(tk.Tk):
     def __init__(self) -> None:
 
         super().__init__()
@@ -112,7 +112,7 @@ class Box(tk.Tk):
 В поля ввода могут вводится исключительно два положительных числа через единственный пробел
 """
 class Coord_Input(tk.Toplevel):
-    def __init__(self, master:Box) -> None:
+    def __init__(self, master:NLK_Window) -> None:
         #master - владелец этого окна, т.е. родитель
         super().__init__(master)
         #Лист для сбора поля ввода
@@ -158,7 +158,7 @@ class Coord_Input(tk.Toplevel):
 """
 Класс окна для создания окна вывода искомых решений
 """
-class Game_Box():
+class PyGameWindow():
     def __init__(self, n:int, window_width=600, border = 1) -> None:
         """
         Параметры:
