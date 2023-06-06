@@ -17,18 +17,9 @@ class ExceptionValueOfAge(ExceptionAge):
 
 class User():
     def __init__(self, name:str, email:str, age:int, *args, **kwargs) -> None:
-        if not isinstance(age, int) or age<0:
-            raise ExceptionTypeOfAge
-        elif age < 16:
-            raise ExceptionValueOfAge
-        elif "@" not in email or not (len(email[:email.index("@")]) and len(email[email.index("@")+1:])):
-            raise ExceptionEmail
-        elif not UniqueName(name, catalog.values()):
-            raise ExceptionName
-        else:
-            self.name = name
-            self.email = email
-            #self.age = age - имя пользователя мы не храним, просто проверяем
+        self.name = name
+        self.email = email
+        #self.age = age - имя пользователя мы не храним, просто проверяем
 
 def UniqueName(name:str, catalog:list[User]): #функция проверки имени на уникальность
     flag = True
@@ -38,19 +29,23 @@ def UniqueName(name:str, catalog:list[User]): #функция проверки �
     return flag
 
 catalog = dict() #{id: User(name, email), } - каталог готовых пользователей
-user_data = [("1", "1@1", 15), ("2", "2@2", 19), ("3", "3@3", 23)] # набор сырых данных
+user_data = [("1", "1@1", 15), ("3", "2@2", 19), ("3", "3@3", 23)] # набор сырых данных
 
 for user in user_data:
-    try:
+    name = user[1]
+    age = user[2]
+    email = user[1]
+
+    if not isinstance(age, int) or age<0:
+        print("Ошибка в веденном возрасте!")
+    elif age < 16:
+        print("Пользователю меньше 16 лет!")
+    elif "@" not in email or not (len(email[:email.index("@")]) and len(email[email.index("@")+1:])):
+        print("Неверное введен email!")
+    elif not UniqueName(name, catalog.values()):
+        print("Имя не уникально!")
+    else:
         check_user = User(*user) #Если при создании экземпляра класса User возникает ошибка, то обрабатывается except
         catalog[id(check_user)] = check_user #Если предыдущая строчка сработала без проблем, то добавляем пользователя в каталог
-    except ExceptionTypeOfAge:
-        print("Возраст пользователя должен быть положительным целым числом")
-    except ExceptionValueOfAge:
-        print("Пользователю меньше 16 лет")
-    except ExceptionEmail:
-        print("Адрес электронной почты недействителен")
-    except ExceptionName:
-        print("Имя пользователя не уникально")
 
 print(catalog)
