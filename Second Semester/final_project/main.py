@@ -93,8 +93,6 @@ from gui import PyGameWindow, NLK_Window
 from figure import King_Horse as kh_figure
 from figure import Figure
 
-
-
 class Game():
     """
     Класс, который подготавливает данные для их дальнейшей обработки, взаимодействует с окнами
@@ -105,7 +103,6 @@ class Game():
         self.figure = figure #Ссылка на фигуру
         self.f = f #Открытый для записи файл
         self.cnt = 0 #Переменная для кол-ва решений
-    
     #Открытие окон ввода и инициализация доски
     def start(self):
         in_data = NLK_Window() #Создаем окно для ввода начальных значений
@@ -113,33 +110,25 @@ class Game():
         n, l, k = in_data.get_info() #Получаем информацию о поле и фигурах
         x, y = in_data.get_coords()  #Получаем координаты K-тых фигур
         in_data.mainloop() #Запускаем окно работать до закрытия
-
         #Если поле размерность 0x0, то и фигуру туда не поставить, а значит вывести "no solution"
         if n == 0: 
             self.output_message("no solution")
             self.f.close()
             return
-        
         self.create_matrixes(n)#Создание матриц для решения
         self.start_time = time.time() #Начало отсчета времени
-
         #Инициализация доски
         board = Board(self.wmatrix, n, [-1]*l, [], l, k, self.matrix_for_pg, self.figure, self.f, self)
-
-
         for index in range(k):
             board.condition_pieces.append((x[index],y[index])) #Запись координат фигур
             pos = y[index]*n + x[index] #Перевод координат в порядковый номер
             board.set_up_piece(board.wmatrix, pos, n) #Постановка в консольной матрице
             #Постановка в матрице pygame
             self.matrix_for_pg.set_up_piece_for_tkinter(pos, n, (0,255,0), (0, 0, 255), self.figure)
-
         #Запуск просчета решений
         board.working()
-
         #Завершение программы
         self.end()
-
     #Функция, которая создает матрицы для решений
     def create_matrixes(self, n):
         self.wmatrix = []
