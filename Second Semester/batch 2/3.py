@@ -7,7 +7,7 @@ class Figure(ABC):
     #Метод принимает в себя номер позиции фигуры на доске
     @abstractmethod
     def __init__(self, pos) -> None:
-        self.pos = pos
+        ...
 
 
     """Метод, принимающий в себя четыре параметра:
