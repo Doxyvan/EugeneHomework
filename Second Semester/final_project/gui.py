@@ -2,8 +2,6 @@ import re
 import tkinter as tk
 import pygame as pg
 
-
-
 """
 Класс окна для ввода N, L, K вида:
 Введите N:
@@ -16,38 +14,29 @@ _________
 """
 class NLK_Window(tk.Tk):
     def __init__(self) -> None:
-
         super().__init__()
         self.resizable(False, False)
         #Валидация
         self.pattern = re.compile("(^[0-9]+$|^$)") #Регулярное выражение для проверки вводимого значения
         vcmd = (self.register(self.validate_entry), "%P") #Функция для активации валидации
-
         #Блок для переменной N
         self.label_for_n = tk.Label(self,text="Введите N")
         self.label_for_n.pack(anchor="n", padx=6, pady=6)
- 
         self.entry_for_n = tk.Entry(self, validate="key", validatecommand=vcmd)
         self.entry_for_n.pack(anchor="n", padx=6, pady=6)
-
         #Блок для переменной L
         self.label_for_l = tk.Label(self,text="Введите L")
         self.label_for_l.pack(anchor="n", padx=6, pady=6)
- 
         self.entry_for_l = tk.Entry(self, validate="key", validatecommand=vcmd)
         self.entry_for_l.pack(anchor="n", padx=6, pady=6)
-
         #Блок для переменной K
         self.label_for_k = tk.Label(self,text="Введите K")
         self.label_for_k.pack(anchor="n", padx=6, pady=6)
- 
         self.entry_for_k = tk.Entry(self, validate="key", validatecommand=vcmd)
         self.entry_for_k.pack(anchor="n", padx=6, pady=6)
-
         #Блок для кнопки
         self.start_button = tk.Button(self,text="Запустить", command=self.create_coordinates_window)
         self.start_button.pack(anchor="n", padx=6, pady=6)
-
         #Координаты для фигур по условию
         self.x, self.y = [], []
 
