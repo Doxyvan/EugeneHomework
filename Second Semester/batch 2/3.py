@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import pygame as pg
 import tkinter as tk
 
 class Figure(ABC):
@@ -42,14 +41,14 @@ class King_Horse(Figure):
             if i%2==0:
                 for m in range(-1,2,2):
                     if n>row+(i-2) >= 0 and n>col+m>=0:
-                        cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                        cells[(row+(i-2))*n+col+m] = color_for_bites
             else:
                 for m in range(-2,3):
                     if n>row+(i-2) >= 0 and n>col+m>=0:
-                        cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                        cells[(row+(i-2))*n+col+m] = color_for_bites
                     
         #Обозначение фигуры на доске
-        cells[row*n+col][0] = color_for_figure
+        cells[row*n+col] = color_for_figure
         return cells
     
 
@@ -73,14 +72,14 @@ class Circle(Figure):
             if i%2==0:
                 for m in range(-1,2,2):
                     if n>row+(i-2) >= 0 and n>col+m>=0:
-                        cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                        cells[(row+(i-2))*n+col+m] = color_for_bites
             else:
                 for m in range(-2,3,2):
                     if n>row+(i-2) >= 0 and n>col+m>=0:
-                        cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                        cells[(row+(i-2))*n+col+m] = color_for_bites
                     
         #Обозначение фигуры на доске
-        cells[row*n+col][0] = color_for_figure
+        cells[row*n+col] = color_for_figure
         return cells
     
 class Vizier(Figure):
@@ -103,37 +102,34 @@ class Vizier(Figure):
             if i!=2:
                 m = 0
                 if n>row+(i-2) >= 0 and n>col+m>=0:
-                    cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                    cells[(row+(i-2))*n+col+m] = color_for_bites
             else:
                 for m in range(-2,3):
                     if n>row+(i-2) >= 0 and n>col+m>=0:
-                        cells[(row+(i-2))*n+col+m][0] = color_for_bites
+                        cells[(row+(i-2))*n+col+m] = color_for_bites
                     
         #Обозначение фигуры на доске
-        cells[row*n+col][0] = color_for_figure
+        cells[row*n+col] = color_for_figure
         return cells
 
-class Game_Box():
-    def __init__(self, n:int, window_width=600, border = 1) -> None:
+class Game_Box(tk.Toplevel):
+    def __init__(self, n:int, master) -> None:
         """
         Параметры:
         n - размерность доски
         window_width - ширина квадратного окна для pygame
         border - расстояние между клеточками
         """
-        super().__init__()
-        
-        #Параметры окна pygame
-        self.border = border
-        self.window_width = window_width #Ширина квадратного окна
-        self.window_height = window_width
-        self.width=window_width//(n) #Размер квадратиков динамически подгоняется под окошко
-        self.cell_list = dict() #Хранит информацию о клетках
-        self.running = 1
-        #Создание белой сетки
+        super().__init__(master)
+        self.matrix = dict()
+        self.cell_list = [0]*n**2
         for i in range(n):
             for j in range(n):
-                self.cell_list[i*n+j] = [(255,255,255), (border+(self.width+border)*j, border+(self.width+border)*i, (self.width), (self.width))]
+                cell =tk.Button(self, text="", height=5, width=10, background="white", state="disabled")
+                cell.grid(row=i, column=j)
+                self.matrix[i*n+j] = cell
+                
+
     
     #Постановка фигуры на поле
     def set_up_piece_for_tkinter(self, pos: int, n: int, color_for_figure:tuple, color_for_bite:tuple, figure) -> list:
@@ -148,27 +144,16 @@ class Game_Box():
         #Очищение поля перед постановкой фигуры
         for i in range(n):
             for j in range(n):
-                self.cell_list[i*n+j] = [(255,255,255), (self.border+(self.width+self.border)*j, self.border+(self.width+self.border)*i, (self.width), (self.width))]
+                self.cell_list[i*n+j] = "white"
         #Постановка фигуры
         if pos is not None:
             self.cell_list = figure(pos).set_up_figure(n, self.cell_list, color_for_figure, color_for_bite)
 
     def draw(self, n: int) -> None:
-        #n - размерность доски, на которой выводятся фигуры
-        #Отрисовка первого решения через PyGame
-        pg.init()#Инициализируем
-        #создаем квадратное окошко размером window_width
-        sc = pg.display.set_mode((self.window_width, self.window_height))
-        self.running=1
-        #Вносим на доску фигуры
         for i in range(n):
             for j in range(n):
-                pg.draw.rect(sc, self.cell_list[i*n+j][0], self.cell_list[i*n+j][1])
-        #Отрисовываем доску один раз
-        pg.display.flip() 
-        #Создадим ограничитель fps
-        clock = pg.time.Clock()
-        clock.tick(30)
+                self.matrix[i*n+j]["background"] = self.cell_list[i*n+j]
+
 
 class Main_Menu(tk.Tk):
     "Содержит меню вида [Название фигуры] - [Кнопка]"
@@ -193,12 +178,12 @@ class Main_Menu(tk.Tk):
         self.button_Vizier.grid(column=3, row=2)
 
         self.n = 11 #Не стоит это менять
-        self.MW = Game_Box(self.n)
+        self.MW = Game_Box(self.n, self)
 
     def set_up(self, figure):
         
         center = int(self.n*(self.n-1)/2)+int(self.n/2)
-        self.MW.set_up_piece_for_tkinter(center, self.n, (255,0,0), (0,0,255), figure)
+        self.MW.set_up_piece_for_tkinter(center, self.n, "red", "blue", figure)
         self.MW.draw(self.n)
 
 
